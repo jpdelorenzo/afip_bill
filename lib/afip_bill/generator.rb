@@ -33,7 +33,7 @@ module AfipBill
     end
 
     def generate_pdf_file
-      tempfile = Tempfile.new("afip_bill.pdf")
+      tempfile = Tempfile.new(["factura_afip", '.pdf' ])
 
       PDFKit.new(template).to_file(tempfile.path)
     end
@@ -61,7 +61,7 @@ module AfipBill
         cbte_tipo: afip_bill["cbte_tipo"],
         pto_venta: AfipBill.configuration[:sale_point],
         cae: afip_bill["cae"],
-        vto_cae: afip_bill["fch_vto_pago"]
+        vto_cae: afip_bill["cae_due_date"]
       }
     end
 
