@@ -34,7 +34,6 @@ module AfipBill
 
     def generate_pdf_file
       tempfile = Tempfile.new(["factura_afip", '.pdf' ])
-
       PDFKit.new(template).to_file(tempfile.path)
     end
 
