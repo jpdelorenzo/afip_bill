@@ -34,11 +34,11 @@ module AfipBill
 
     def generate_pdf_file
       tempfile = Tempfile.new(["factura_afip", '.pdf' ])
-      PDFKit.new(template).to_file(tempfile.path)
+      PDFKit.new(template, disable_smart_shrinking: true, page_size: 'A4', print_media_type: true).to_file(tempfile.path)
     end
 
     def generate_pdf_string
-      PDFKit.new(template).to_pdf
+      PDFKit.new(template, disable_smart_shrinking: true, page_size: 'A4', print_media_type: true).to_pdf
     end
 
     private
