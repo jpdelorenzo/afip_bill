@@ -134,20 +134,6 @@
     div.cls_014 {
       font-size: 6.0px;
     }
-
-    table.barby-barcode {
-      border-spacing: 0;
-      height: 45px;
-      width: 369px;
-    }
-    tr.barby-row {}
-    td.barby-cell {
-      width: 1px;
-      height: 45px;
-    }
-    td.barby-cell.on {
-      background: #000;
-    }
     .breaker {
       page-break-before: always;
     }
@@ -188,12 +174,12 @@
   <div style="left:232.44px;top:169.29px" class="cls_005"><span class="cls_005">Hasta:</span><span class="cls_007"><%= Date.parse(afip_bill["fch_serv_hasta"]).strftime("%d/%m/%Y") %></span></div>
   <div style="left:362.96px;top:169.29px" class="cls_005"><span class="cls_005">Fecha de Vto. para el pago:</span></div>
   <div style="left:495.00px;top:169.29px" class="cls_007"><span class="cls_007"><%= Date.parse(afip_bill["fch_vto_pago"]).strftime("%d/%m/%Y") %></span></div>
-  <div style="left:21.00px;top:189.59px" class="cls_002"><span class="cls_002">CUIT:</span></div>
+  <div style="left:21.00px;top:189.59px" class="cls_002"><span class="cls_002"><%= user.document_type %></span></div>
   <div style="left:52.00px;top:189.59px" class="cls_006"><span class="cls_006"><%= afip_bill["doc_num"] %></span></div>
-  <div style="left:205.97px;top:189.59px" class="cls_002"><span class="cls_002">Apellido y Nombre / Razón Social:</span></div>
-  <div style="left:354.00px;top:190.63px" class="cls_008"><span class="cls_008"><%= bill_type == "a" ? user.company_name : user.owner_name %></span></div>
+  <div style="left:262.48px;top:189.59px" class="cls_002"><span class="cls_002">Apellido y Nombre / Razón Social:</span></div>
+  <div style="left:320px;top:190.63px" class="cls_008"><span class="cls_008"><%= bill_type == "a" ? user.company_name : user.owner_name %></span></div>
   <div style="left:21.00px;top:208.59px" class="cls_002"><span class="cls_002">Condición frente al IVA:</span></div>
   <div style="left:131.00px;top:208.59px" class="cls_006"><span class="cls_006"><%= user.tax_category %></span></div>
   <div style="width:200px;left:262.48px;top:208.59px" class="cls_002"><span class="cls_002">Domicilio Comercial:</span><span style="width:200px;" class="cls_008"> <%= user.address %></span></div>
   <div style="left:21.00px;top:229.91px" class="cls_002"><span class="cls_002">Condición de venta:</span><span class="cls_008">  Otra</span></div>
-  <div style="width:200px;left:205.97px;top:229.91px" class="cls_002"><span class="cls_002">Alumno/a:</span><span class="cls_008">  <%= user.student_name %></span></div>
+  <div style="width:200px;left:262.48px;top:229.91px" class="cls_002"><span class="cls_002">Alumno/a:</span><span class="cls_008">  <%= user.student_name %></span></div>
