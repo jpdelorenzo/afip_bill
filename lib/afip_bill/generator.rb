@@ -28,14 +28,19 @@ module AfipBill
       BRAVO_CBTE_TIPO[afip_bill["cbte_tipo"]][-1].downcase
     end
 
-    def qr_code
-      @qr_code ||= RQRCode::QRCode.new(qr_code_string).as_svg(
-        offset: 0,
-        color: '000',
-        shape_rendering: 'crispEdges',
-        module_size: 1,
-        standalone: true
-      ).gsub('"', '\'').gsub("\n",'')
+    def qr_code_data_url
+      @qr_code ||= RQRCode::QRCode.new(qr_code_string).as_png(
+        bit_depth: 1,
+        border_modules: 2,
+        color_mode: ChunkyPNG::COLOR_GRAYSCALE,
+        color: 'black',
+        file: nil,
+        fill: 'white',
+        module_px_size: 12,
+        resize_exactly_to: false,
+        resize_gte_to: false,
+        size: 120
+      ).to_data_url
     end
 
     def generate_pdf_file
@@ -61,7 +66,7 @@ module AfipBill
       {
         ver: 1,
         fecha: Date.parse(afip_bill["cbte_fch"]).strftime("%Y-%m-%d"),
-        cuit: afip_bill["doc_num"].tr("-", "").strip,
+        cuit: AfipBill.configuration[:business_cuit],
         ptoVta: AfipBill.configuration[:sale_point],
         tipoCmp: afip_bill["cbte_tipo"],
         nroCmp: afip_bill["cbte_hasta"].to_s.rjust(8, "0"),
@@ -69,7 +74,7 @@ module AfipBill
         moneda: "PES",
         ctz: 1,
         tipoDocRec: user.afip_document_type,
-        nroDocRec: afip_bill["doc_num"],
+        nroDocRec: afip_bill["doc_num"].tr("-", "").strip,
         tipoCodAut: "E",
         codAut: afip_bill["cae"]
       }
