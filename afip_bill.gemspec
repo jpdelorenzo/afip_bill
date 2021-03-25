@@ -26,6 +26,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec", "~> 3.0"
   s.add_development_dependency "pry-byebug", "~> 3.4.0"
 
-  s.add_dependency "barby", "~> 0.6.2"
   s.add_dependency "pdfkit", "~> 0.8.2"
+  s.add_dependency "rqrcode", "~> 1.2.0"
 end

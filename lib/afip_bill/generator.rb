@@ -1,14 +1,14 @@
 require "json"
 require "date"
 require "afip_bill/check_digit"
-require "barby/barcode/code_25_interleaved"
-require "barby/outputter/html_outputter"
 require "pdfkit"
+require "rqrcode"
 
 module AfipBill
   class Generator
     attr_reader :afip_bill, :bill_type, :user, :line_items, :header_text
 
+    AFIP_QR_URL = 'https://www.afip.gob.ar/fe/qr/'
     HEADER_PATH = File.dirname(__FILE__) + '/views/shared/_factura_header.html.erb'.freeze
     FOOTER_PATH = File.dirname(__FILE__) + '/views/shared/_factura_footer.html.erb'.freeze
     BRAVO_CBTE_TIPO = { "01" => "Factura A", "06" => "Factura B", "11" => "Factura C" }.freeze
@@ -28,8 +28,19 @@ module AfipBill
       BRAVO_CBTE_TIPO[afip_bill["cbte_tipo"]][-1].downcase
     end
 
-    def barcode
-      @barcode ||= Barby::Code25Interleaved.new(code_numbers)
+    def qr_code_data_url
+      @qr_code ||= RQRCode::QRCode.new(qr_code_string).as_png(
+        bit_depth: 1,
+        border_modules: 2,
+        color_mode: ChunkyPNG::COLOR_GRAYSCALE,
+        color: 'black',
+        file: nil,
+        fill: 'white',
+        module_px_size: 12,
+        resize_exactly_to: false,
+        resize_gte_to: false,
+        size: 120
+      ).to_data_url
     end
 
     def generate_pdf_file
@@ -44,23 +55,28 @@ module AfipBill
     private
 
     def bill_path
-      File.dirname(__FILE__) + "/views/bills/factura_#{bill_type}.html.erb"
+      File.dirname(__FILE__) + "/views/bills/factura_#{bill_type}.html.erb" 
     end
 
-    def code_numbers
-      code = code_hash.values.join("")
-      last_digit = CheckDigit.new(code).calculate
-      result = "#{code}#{last_digit}"
-      result.size.odd? ? "0" + result : result
+    def qr_code_string
+      "#{AFIP_QR_URL}?p=#{Base64.encode64(qr_hash.to_json)}"
     end
 
-    def code_hash
+    def qr_hash
       {
-        cuit: afip_bill["doc_num"].tr("-", "").strip,
-        cbte_tipo: afip_bill["cbte_tipo"],
-        pto_venta: AfipBill.configuration[:sale_point],
-        cae: afip_bill["cae"],
-        vto_cae: afip_bill["cae_due_date"]
+        ver: 1,
+        fecha: Date.parse(afip_bill["cbte_fch"]).strftime("%Y-%m-%d"),
+        cuit: AfipBill.configuration[:business_cuit],
+        ptoVta: AfipBill.configuration[:sale_point],
+        tipoCmp: afip_bill["cbte_tipo"],
+        nroCmp: afip_bill["cbte_hasta"].to_s.rjust(8, "0"),
+        importe: afip_bill["imp_total"],
+        moneda: "PES",
+        ctz: 1,
+        tipoDocRec: user.afip_document_type,
+        nroDocRec: afip_bill["doc_num"].tr("-", "").strip,
+        tipoCodAut: "E",
+        codAut: afip_bill["cae"]
       }
     end
 
