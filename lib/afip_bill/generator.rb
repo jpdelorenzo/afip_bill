@@ -52,31 +52,29 @@ module AfipBill
       PDFKit.new(template, disable_smart_shrinking: true).to_pdf
     end
 
-    private
-
     def bill_path
       File.dirname(__FILE__) + "/views/bills/factura_#{bill_type}.html.erb" 
     end
 
     def qr_code_string
-      "#{AFIP_QR_URL}?p=#{Base64.encode64(qr_hash.to_json)}"
+      "#{AFIP_QR_URL}?p=#{Base64.urlsafe_encode64(qr_hash.to_json)}"
     end
 
     def qr_hash
       {
         ver: 1,
         fecha: Date.parse(afip_bill["cbte_fch"]).strftime("%Y-%m-%d"),
-        cuit: AfipBill.configuration[:business_cuit],
-        ptoVta: AfipBill.configuration[:sale_point],
-        tipoCmp: afip_bill["cbte_tipo"],
-        nroCmp: afip_bill["cbte_hasta"].to_s.rjust(8, "0"),
+        cuit: AfipBill.configuration[:business_cuit].to_i,
+        ptoVta: AfipBill.configuration[:sale_point].to_i,
+        tipoCmp: afip_bill["cbte_tipo"].to_i,
+        nroCmp: afip_bill["cbte_hasta"].to_s.rjust(8, "0").to_i,
         importe: afip_bill["imp_total"],
         moneda: "PES",
         ctz: 1,
-        tipoDocRec: user.afip_document_type,
-        nroDocRec: afip_bill["doc_num"].tr("-", "").strip,
+        tipoDocRec: afip_bill["doc_tipo"].to_i,
+        nroDocRec: afip_bill["doc_num"].tr("-", "").strip.to_i,
         tipoCodAut: "E",
-        codAut: afip_bill["cae"]
+        codAut: afip_bill["cae"].to_i
       }
     end
 
