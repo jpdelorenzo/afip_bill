@@ -8,6 +8,7 @@ module AfipBill
   def self.configuration
     @configuration ||= {
       header_business_name: nil,
+      header_business_subname: nil,
       business_name: nil,
       business_address: nil,
       business_start_date: nil,
