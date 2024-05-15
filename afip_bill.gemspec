@@ -28,4 +28,5 @@ Gem::Specification.new do |s|
 
   s.add_dependency "pdfkit", "~> 0.8.2"
   s.add_dependency "rqrcode", "~> 1.2.0"
+  s.add_dependency "humanize", "~> 2.5.1"
 end

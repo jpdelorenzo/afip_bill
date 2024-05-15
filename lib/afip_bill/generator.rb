@@ -3,10 +3,11 @@ require "date"
 require "afip_bill/check_digit"
 require "pdfkit"
 require "rqrcode"
+require "humanize"
 
 module AfipBill
   class Generator
-    attr_reader :afip_bill, :bill_type, :user, :line_items, :header_text
+    attr_reader :afip_bill, :bill_type, :user, :line_items, :header_text, :total_in_text, :total_cents_in_text
 
     AFIP_QR_URL = 'https://www.afip.gob.ar/fe/qr/'
     HEADER_PATH = File.dirname(__FILE__) + '/views/shared/_factura_header.html.erb'.freeze
@@ -22,6 +23,8 @@ module AfipBill
       @template_header = ERB.new(File.read(HEADER_PATH)).result(binding)
       @template_footer = ERB.new(File.read(FOOTER_PATH)).result(binding)
       @header_text = header_text
+      @total_in_text = afip_bill["imp_total"].to_i.humanize(locale: :es)
+      @total_cents_in_text = (afip_bill["imp_total"].modulo(1) * 100).round.humanize(locale: :es)
     end
 
     def type_a_or_b_bill
