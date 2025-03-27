@@ -158,7 +158,7 @@
   <div style="left:417.00px;top:84.04px" class="cls_005"><span class="cls_005"><%= AfipBill.configuration[:sale_point] %></span></div>
   <div style="left:461.00px;top:84.24px" class="cls_002"><span class="cls_002">Comp. Nro:</span></div>
   <div style="left:517.00px;top:84.04px" class="cls_005"><span class="cls_005"><%= afip_bill["cbte_hasta"].to_s.rjust(8, "0") %></span></div>
-  <div style="left:21.00px;top:101.59px" class="cls_002"><span class="cls_002">Razón Social:</span><span class="cls_006"> <%= AfipBill.configuration[:business_name] %></span></div>
+  <div style="left:21.00px;top:101.59px; width: 170px;" class="cls_002"><span class="cls_002">Razón Social:</span><span class="cls_006"> <%= AfipBill.configuration[:business_name] %></span></div>
   <div style="left:341.00px;top:100.41px" class="cls_002"><span class="cls_002">Fecha de Emisión:</span></div>
   <div style="left:428.00px;top:99.54px" class="cls_005"><span class="cls_005"><%= Date.parse(afip_bill["cbte_fch"]).strftime("%d/%m/%Y") %></span></div>
   <div style="left:21.00px;top:125.59px" class="cls_002"><span class="cls_002">Domicilio Comercial:</span><span class="cls_006"> <%= AfipBill.configuration[:business_address] %> </span></div>
